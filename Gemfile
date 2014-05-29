@@ -31,6 +31,14 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'angularjs-rails'
 
+gem 'paperclip'
+
+gem 'rails_admin'
+
+gem 'rabl'
+
+gem 'oj'
+
 
 group :test, :development do
 	gem 'faker'
