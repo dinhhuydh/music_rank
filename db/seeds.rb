@@ -5,3 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+4.times do
+	Song.create(:title => Faker::Name.name, :description => Faker::Lorem.sentence);
+end
