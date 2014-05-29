@@ -1,13 +1,17 @@
 .row
   %h1 Welcome to the music world
 .row(ng-controller="SongsController" ng-init= "init()")
-  .col-md-4
+  .col-md-3
     Current song
     .song-info
       {{currentSong.title}}
     .song-description
       {{currentSong.description}}
-  .col-md-8
+    .song-jp
+      %audio(controls= "" id = "audio1")
+        %source(type= "audio/mp3" src="/system/songs/files/000/000/004/original/Anh_Nho_Em_Nguoi_Yeu_Cu_-_Minh_Vuong_M4U.mp3?1401339465")
+          Your browser does not support the audio element.
+  .col-md-6
     List songs
     %ul
       %li.song(ng-repeat="song in songs" ng-click="setCurrentSong(song)")
@@ -15,4 +19,11 @@
           {{song.title}}
         .description
           {{song.description}}
+
+  .col-md-3
+    BillBoard
+    %ul
+      %li.billboard-song(ng-repeat="song in songs| orderBy:viewer_count")
+        .title
+          {{song.title}}
 
