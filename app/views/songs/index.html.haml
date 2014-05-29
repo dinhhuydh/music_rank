@@ -1,7 +1,18 @@
 .row
   %h1 Welcome to the music world
-.row
+.row(ng-controller="SongsController" ng-init= "init()")
   .col-md-4
     Current song
+    .song-info
+      {{currentSong.title}}
+    .song-description
+      {{currentSong.description}}
   .col-md-8
     List songs
+    %ul
+      %li.song(ng-repeat="song in songs" ng-click="setCurrentSong(song)")
+        .title
+          {{song.title}}
+        .description
+          {{song.description}}
+
