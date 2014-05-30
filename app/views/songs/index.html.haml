@@ -13,17 +13,13 @@
           Your browser does not support the audio element.
   .col-md-6
     List songs
-    %ul
-      %li.song(ng-repeat="song in songs" ng-click="setCurrentSong(song)")
+    %input.ng-valid{"ng-model" => "search", style: "width: 150px;", type: "text"}
+    %ol
+      %li.song(ng-repeat="song in songs | orderBy:'rank' | filter:search" ng-click="setCurrentSong(song)")
         .title
-          {{song.title}}
+          {{song.title}} {{song.id}}
         .description
           {{song.description}}
-
-  .col-md-3
-    BillBoard
-    %ul
-      %li.billboard-song(ng-repeat="song in songs| orderBy:viewer_count")
-        .title
-          {{song.title}}
+        .rank
+          Rank: {{song.rank}}
 

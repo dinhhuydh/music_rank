@@ -1,11 +1,27 @@
-musicRankModule = angular.module('musicRankApp', ['ngResource']);
+musicRankModule = angular.module('musicRankApp', ['ngResource', 'ngAnimate']);
 
 musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
   $scope.songs = []
   $scope.currentSong = {}
+
   $scope.init = () ->
     Song = $resource('/songs.json', {})
     $scope.songs = Song.query()
+    $scope.pubnub = PUBNUB.init
+      publish_key : MusicRankConfig.pubnub_publish_key
+      subscribe_key : MusicRankConfig.pubnub_subcribe_key
+
+    $scope.pubnub.subscribe
+      channel: "myChannel"
+      callback: (message) ->
+        $scope.subscribeCallback(message)
+
+      connect: ->
+        $scope.pubnub.publish
+          channel: "myChannel"
+          message: "Hello World from the other side!"
+
+        return
 
   $scope.setCurrentSong = (song) ->
     #set pause time for the song
@@ -29,9 +45,29 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
       audio[0].currentTime = $scope.currentSong.currentTime if $scope.currentSong.currentTime
 
     $scope.increaseViewer()
-    true
+    false
 
   $scope.increaseViewer = ->
     $http
       method: 'GET'
       url: "/songs/#{$scope.currentSong.id}/increase_viewer"
+
+  $scope.setSongOrder = (songOrder) ->
+
+    angular.forEach($scope.songs, (song) ->
+      if song.id == songOrder[0]
+        song.rank = songOrder[1]
+        return
+      )
+
+  $scope.subscribeCallback = (message) ->
+    return if typeof(message) == "string"
+    console.log(message)
+    console.log($scope.songs)
+
+    angular.forEach(message, (songOrder) =>
+      $scope.setSongOrder(songOrder)
+    )
+    true
+
+

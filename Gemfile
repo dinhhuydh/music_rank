@@ -39,6 +39,8 @@ gem 'rabl'
 
 gem 'oj'
 
+gem 'pubnub'
+
 
 group :test, :development do
 	gem 'faker'

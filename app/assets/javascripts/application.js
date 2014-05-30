@@ -12,6 +12,7 @@
 //
 //= require angular
 //= require angular-resource
+//= require angular-animate
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
