@@ -14,8 +14,8 @@
   .col-md-6
     List songs
     %input.ng-valid{"ng-model" => "search", style: "width: 150px;", type: "text"}
-    %ol
-      %li.song(ng-repeat="song in songs | orderBy:'rank' | filter:search" ng-click="setCurrentSong(song)")
+    %ol.songs
+      %li.song.mix.category(ng-repeat="song in songs | orderBy:'rank' | filter:search" ng-click="setCurrentSong(song)" data-my-order="{{song.rank}}")
         .title
           {{song.title}} {{song.id}}
         .description

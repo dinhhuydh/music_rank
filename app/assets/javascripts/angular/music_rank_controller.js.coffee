@@ -68,6 +68,16 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
     angular.forEach(message, (songOrder) =>
       $scope.setSongOrder(songOrder)
     )
+
+
+    $('.songs').mixItUp()
+    $('.songs').mixItUp('changeLayout',
+      display: 'block'
+      containerClass: 'songs'
+    )
+
+    $('.songs').mixItUp('destroy', true)
+    $scope.$apply()
     true
 
 
