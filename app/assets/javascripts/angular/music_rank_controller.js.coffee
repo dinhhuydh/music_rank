@@ -3,9 +3,13 @@ musicRankModule = angular.module('musicRankApp', ['ngResource', 'ngAnimate']);
 musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
   $scope.songs = []
   $scope.currentSong = {}
+  $scope.currentSongListeners = []
+  $scope.user = {}
+  $scope.oldSongId = 0
 
-  $scope.init = () ->
+  $scope.init = (options) ->
     Song = $resource('/songs.json', {})
+    $scope.user = options.user
     $scope.songs = Song.query()
     $scope.pubnub = PUBNUB.init
       publish_key : MusicRankConfig.pubnub_publish_key
@@ -22,13 +26,34 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
           message: "Hello World from the other side!"
 
         return
+    true
 
   $scope.setCurrentSong = (song) ->
     #set pause time for the song
     audio_tag = document.getElementById('audio1')
     $scope.currentSong.currentTime = audio_tag.currentTime
     audio_tag.pause()
+    $scope.oldSongId = $scope.currentSong.id
 
+    $scope.resetCurrentSong(song)
+
+    $scope.increaseViewer()
+    $scope.subcribeCurrentSongChannel()
+
+    false
+
+  $scope.subcribeCurrentSongChannel = () ->
+    $scope.pubnub.subscribe
+      channel: $scope.currentSong.channel
+      callback: (message) ->
+        $scope.handleSongMessage(message)
+
+  $scope.handleSongMessage = (message) ->
+    console.log message
+    $scope.currentSongListeners = message
+    $scope.$apply()
+
+  $scope.resetCurrentSong = (song) ->
     #reset current song
     $scope.currentSong = song
     audioSection = $(".song-jp")
@@ -44,13 +69,14 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
     audio.on 'loadedmetadata', ->
       audio[0].currentTime = $scope.currentSong.currentTime if $scope.currentSong.currentTime
 
-    $scope.increaseViewer()
-    false
-
   $scope.increaseViewer = ->
-    $http
+    $http(
       method: 'GET'
-      url: "/songs/#{$scope.currentSong.id}/increase_viewer"
+      url: "/songs/#{$scope.currentSong.id}/increase_viewer?user_id=#{$scope.user.id}&old_song_id=#{$scope.oldSongId}"
+    ).success((data) ->
+      console.log data
+      $scope.currentSongListeners = data
+    )
 
   $scope.setSongOrder = (songOrder) ->
 
@@ -62,8 +88,6 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
 
   $scope.subscribeCallback = (message) ->
     return if typeof(message) == "string"
-    console.log(message)
-    console.log($scope.songs)
 
     angular.forEach(message, (songOrder) =>
       $scope.setSongOrder(songOrder)

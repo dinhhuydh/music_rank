@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140529075604) do
+ActiveRecord::Schema.define(version: 20140602072239) do
 
   create_table "songs", force: true do |t|
     t.string   "title"
@@ -23,6 +23,19 @@ ActiveRecord::Schema.define(version: 20140529075604) do
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.integer  "viewer_count",      default: 0
+  end
+
+  create_table "users", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "users_songs", force: true do |t|
+    t.integer  "song_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end

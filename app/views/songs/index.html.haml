@@ -1,6 +1,6 @@
 .row
-  %h1 Welcome to the music world
-.row(ng-controller="SongsController" ng-init= "init()")
+  %h1= "Welcome #{@user.name} to the music world"
+.row(ng-controller="SongsController" ng-init= "init(#{application_options(@user)})")
   .col-md-3
     Current song
     .song-info
@@ -11,6 +11,10 @@
       %audio(controls= "" id = "audio1")
         %source(type= "audio/mp3" src="/system/songs/files/000/000/004/original/Anh_Nho_Em_Nguoi_Yeu_Cu_-_Minh_Vuong_M4U.mp3?1401339465")
           Your browser does not support the audio element.
+    .current_listeners
+      %ul
+        %li(ng-repeat = "user in currentSongListeners")
+          {{user.name}}
   .col-md-6
     List songs
     %input.ng-valid{"ng-model" => "search", style: "width: 150px;", type: "text"}
@@ -22,4 +26,9 @@
           {{song.description}}
         .rank
           Rank: {{song.rank}}
-
+  .col-md-3
+    %textarea(rows="6")
+:javascript
+  window.onbeforeunload = function(){
+      return "Do you want to leave?"
+  }

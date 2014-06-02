@@ -6,3 +6,6 @@ end
 node :rank do |u|
   u.id
 end
+node :channel do |u|
+  u.channel
+end
