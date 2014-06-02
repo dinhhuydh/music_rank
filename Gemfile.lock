@@ -30,6 +30,9 @@ GEM
     bootstrap-sass (3.1.1.1)
       sass (~> 3.2)
     builder (3.1.4)
+    byebug (3.1.2)
+      columnize (~> 0.8)
+      debugger-linecache (~> 1.2)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.4)
@@ -41,6 +44,8 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.7.0)
+    columnize (0.8.9)
+    debugger-linecache (1.2.0)
     erubis (2.7.0)
     eventmachine (1.0.3)
     execjs (2.1.0)
@@ -164,6 +169,7 @@ PLATFORMS
 DEPENDENCIES
   angularjs-rails
   bootstrap-sass (~> 3.1.1)
+  byebug
   coffee-rails (~> 4.0.0)
   faker
   haml

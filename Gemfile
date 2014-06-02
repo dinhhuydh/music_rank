@@ -43,7 +43,8 @@ gem 'pubnub'
 
 
 group :test, :development do
-	gem 'faker'
+  gem 'faker'
+  gem 'byebug'
 end
 
 group :doc do
