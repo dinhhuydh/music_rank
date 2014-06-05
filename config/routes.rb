@@ -12,6 +12,12 @@ MusicRank::Application.routes.draw do
     end
   end
 
+  resources :rooms do 
+    collection do 
+      get :chat
+    end
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

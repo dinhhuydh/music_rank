@@ -6,6 +6,9 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
   $scope.currentSongListeners = []
   $scope.user = {}
   $scope.oldSongId = 0
+  $scope.targetUser = {}
+  $scope.chatContent = ""
+  $scope.currentChannel = ""
 
   $scope.init = (options) ->
     Song = $resource('/songs.json', {})
@@ -74,7 +77,6 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
       method: 'GET'
       url: "/songs/#{$scope.currentSong.id}/increase_viewer?user_id=#{$scope.user.id}&old_song_id=#{$scope.oldSongId}"
     ).success((data) ->
-      console.log data
       $scope.currentSongListeners = data
     )
 
@@ -103,5 +105,34 @@ musicRankModule.controller 'SongsController', ($scope, $resource, $http) ->
     $('.songs').mixItUp('destroy', true)
     $scope.$apply()
     true
+
+  $scope.setTargetUser = (user) ->
+    $scope.targetUser = user
+    $http(
+      method: 'POST',
+      url: "rooms.json",
+      data: 
+        sender_id: $scope.user.id
+        receiver_id: $scope.targetUser.id
+    ).success((data) ->
+      $scope.currentChannel = data.channel
+      $scope.pubnub.subscribe
+        channel: data.channel
+        callback: (message) ->
+          $scope.chatContent = $scope.chatContent + message.username + ":" + message.content + "\n"
+    )
+
+  $scope.sendMessage = (event) ->
+    if event.which == 13 
+      previousChat = $scope.chatMessage
+      $scope.chatContent = $scope.chatContent + $scope.user.name + ":" + $scope.chatMessage + "\n"
+      $scope.chatMessage = ""
+      $scope.publishToChannel(previousChat)
+
+  $scope.publishToChannel = (previousChat) ->
+    $scope.pubnub.publish
+      channel: $scope.currentChannel
+      message: previousChat
+
 
 
